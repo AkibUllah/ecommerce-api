@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ecommerce-api"
+version = "0.1.0"
+description = "Django + DRF e-commerce backend for Bangladesh retail: catalog, carts, checkout with stock reservation, bKash/SSLCommerz/COD payments, Pathao/RedX shipping, coupons and reviews."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Akib Jafor" }]
+requires-python = ">=3.10"
+dependencies = [
+    "Django>=4.2,<5.0",
+    "djangorestframework>=3.14",
+    "djangorestframework-simplejwt>=5.3",
+    "django-filter>=23.5",
+    "drf-spectacular>=0.27",
+    "django-environ>=0.11",
+    "psycopg[binary]>=3.1",
+    "gunicorn>=21.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-django>=4.7",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+]
+
+[tool.setuptools]
+packages = ["config", "apps"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["test_*.py"]
+testpaths = ["tests"]
+addopts = "-p no:cacheprovider --reuse-db"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["*/migrations/*"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "DJ"]
+ignore = ["B904", "DJ001"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["apps", "config"]
