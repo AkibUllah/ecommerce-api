@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ecommerce
+      POSTGRES_USER: ecommerce
+      POSTGRES_PASSWORD: ecommerce
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecommerce -d ecommerce"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DJANGO_SECRET_KEY: compose-dev-secret-key-replace-in-production-0123456789
+      DJANGO_DEBUG: "false"
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,api
+      DATABASE_URL: postgres://ecommerce:ecommerce@db:5432/ecommerce
+      VAT_RATE: "0.05"
+      RESERVATION_TTL_MINUTES: "30"
+      BKASH_WEBHOOK_SECRET: bkash-sandbox-secret
+      SSLCOMMERZ_WEBHOOK_SECRET: sslcommerz-sandbox-secret
+    ports:
+      - "8000:8000"
+
+  # Cron-style replacement for a Celery beat: expires unpaid orders every minute.
+  reservation-sweeper:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DJANGO_SECRET_KEY: compose-dev-secret-key-replace-in-production-0123456789
+      DATABASE_URL: postgres://ecommerce:ecommerce@db:5432/ecommerce
+    command: sh -c "while true; do python manage.py release_expired_reservations; sleep 60; done"
+
+volumes:
+  pgdata:
