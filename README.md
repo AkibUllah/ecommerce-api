@@ -1,3 +1,4 @@
+<!-- topics: django,django-rest-framework,python,ecommerce,rest-api,bkash,inventory,coupons,bangladesh -->
 # E-commerce API
 
 Django + DRF backend for a Bangladesh retail storefront: catalogue, guest and user carts, checkout with locked stock reservations, bKash / SSLCommerz / cash-on-delivery payments, Pathao and RedX shipping rates, coupons and reviews.
