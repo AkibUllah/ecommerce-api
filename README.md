@@ -8,6 +8,15 @@ Django + DRF backend for a Bangladesh retail storefront: catalogue, guest and us
 ![Django](https://img.shields.io/badge/django-4.2-0C4B33)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+## Try it live
+
+| | |
+|---|---|
+| API reference | https://akibullah.github.io/ecommerce-api/ — Swagger UI built from the drf-spectacular schema (static; no backend behind it) |
+| Run in your browser | [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/AkibUllah/ecommerce-api?quickstart=1) — starts API + reservation sweeper + PostgreSQL with `docker compose` and runs `seed_demo`; open forwarded port 8000 at `/api/docs/` (Swagger) or `/admin/` (`admin` / `admin12345`). |
+| One-click deploy | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/AkibUllah/ecommerce-api) — `render.yaml` provisions the web service and a free PostgreSQL; the container migrates and seeds the demo catalogue on start, secrets are generated. |
+| Local | `docker compose up` (see Quick Start) |
+
 ## Why this exists
 
 Most Bangladeshi e-commerce backends I have worked on got the same three things wrong: overselling the last unit during a flash sale, computing VAT and courier fees in floating point, and treating a payment webhook as trusted input. This project is the checkout core I would want to start from: stock is reserved under a row lock and expires if the customer never pays, every amount is a `Decimal`, and provider callbacks are HMAC-verified, deduplicated and amount-checked before an order is confirmed. Shipping and payment providers sit behind small adapter protocols so the sandbox stubs can be swapped for live integrations without touching the order flow.

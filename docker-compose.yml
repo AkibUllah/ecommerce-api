@@ -21,7 +21,9 @@ services:
     environment:
       DJANGO_SECRET_KEY: compose-dev-secret-key-replace-in-production-0123456789
       DJANGO_DEBUG: "false"
-      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,api
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,api}
+      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-}
+      DJANGO_BEHIND_PROXY: ${DJANGO_BEHIND_PROXY:-false}
       DATABASE_URL: postgres://ecommerce:ecommerce@db:5432/ecommerce
       VAT_RATE: "0.05"
       RESERVATION_TTL_MINUTES: "30"

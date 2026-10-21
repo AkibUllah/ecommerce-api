@@ -1,4 +1,4 @@
-.PHONY: install dev migrate run seed test lint fmt release-expired compose-up compose-down
+.PHONY: install dev migrate run seed test lint fmt release-expired openapi compose-up compose-down
 
 PY ?= .venv/bin/python
 PIP ?= .venv/bin/pip
@@ -29,6 +29,9 @@ lint:
 fmt:
 	$(PY) -m ruff format .
 	$(PY) -m ruff check --fix .
+
+openapi:
+	DATABASE_URL="sqlite://:memory:" $(PY) manage.py spectacular --format openapi-json --file openapi.json
 
 compose-up:
 	docker compose up --build -d
