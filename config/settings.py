@@ -13,11 +13,16 @@ from pathlib import Path
 
 import environ
 
+from config.hosts import allowed_hosts, csrf_trusted_origins
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
     DJANGO_DEBUG=(bool, False),
     DJANGO_ALLOWED_HOSTS=(list, ["localhost", "127.0.0.1"]),
+    DJANGO_CSRF_TRUSTED_ORIGINS=(list, []),
+    DJANGO_BEHIND_PROXY=(bool, False),
+    RENDER_EXTERNAL_HOSTNAME=(str, ""),
     VAT_RATE=(str, "0.05"),
     RESERVATION_TTL_MINUTES=(int, 30),
     DEFAULT_CURRENCY=(str, "BDT"),
@@ -32,7 +37,13 @@ SECRET_KEY = env(
     "DJANGO_SECRET_KEY", default="insecure-dev-only-key-replace-me-before-deploying-0123456789"
 )
 DEBUG = env("DJANGO_DEBUG")
-ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS")
+ALLOWED_HOSTS = allowed_hosts(env("DJANGO_ALLOWED_HOSTS"), env("RENDER_EXTERNAL_HOSTNAME"))
+CSRF_TRUSTED_ORIGINS = csrf_trusted_origins(
+    env("DJANGO_CSRF_TRUSTED_ORIGINS"), env("RENDER_EXTERNAL_HOSTNAME")
+)
+if env("DJANGO_BEHIND_PROXY"):
+    # TLS is terminated by the platform proxy (Render, Codespaces port forwarding).
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
