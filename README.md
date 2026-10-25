@@ -4,6 +4,8 @@
 Django + DRF backend for a Bangladesh retail storefront: catalogue, guest and user carts, checkout with locked stock reservations, bKash / SSLCommerz / cash-on-delivery payments, Pathao and RedX shipping rates, coupons and reviews.
 
 [![CI](https://github.com/AkibUllah/ecommerce-api/actions/workflows/ci.yml/badge.svg)](https://github.com/AkibUllah/ecommerce-api/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/AkibUllah/ecommerce-api/actions/workflows/codeql.yml/badge.svg)](https://github.com/AkibUllah/ecommerce-api/actions/workflows/codeql.yml)
+[![Release](https://img.shields.io/github/v/release/AkibUllah/ecommerce-api)](https://github.com/AkibUllah/ecommerce-api/releases)
 ![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11-blue)
 ![Django](https://img.shields.io/badge/django-4.2-0C4B33)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -16,6 +18,16 @@ Django + DRF backend for a Bangladesh retail storefront: catalogue, guest and us
 | Run in your browser | [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/AkibUllah/ecommerce-api?quickstart=1) — starts API + reservation sweeper + PostgreSQL with `docker compose` and runs `seed_demo`; open forwarded port 8000 at `/api/docs/` (Swagger) or `/admin/` (`admin` / `admin12345`). |
 | One-click deploy | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/AkibUllah/ecommerce-api) — `render.yaml` provisions the web service and a free PostgreSQL; the container migrates and seeds the demo catalogue on start, secrets are generated. |
 | Local | `docker compose up` (see Quick Start) |
+
+## Screenshots
+
+![Swagger UI API reference](docs/images/api-reference.png)
+
+Live API reference on GitHub Pages, generated from the drf-spectacular schema.
+
+![curl session against a local instance](docs/images/terminal-demo.png)
+
+A real curl session against a local instance with the demo catalogue: product search with Bangla labels, a guest cart, courier quotes for Dhaka, and a cash-on-delivery checkout with a coupon that commits stock.
 
 ## Why this exists
 
@@ -185,7 +197,7 @@ ecommerce-api/
 ## Testing
 
 ```bash
-make test        # pytest -q   (76 tests, SQLite, no external services)
+make test        # pytest -q   (79 tests, SQLite, no external services)
 make lint        # ruff check + format check
 ```
 
@@ -193,11 +205,11 @@ Covered: inventory reserve/commit/release and the `reserved <= quantity` invaria
 
 ## Roadmap
 
-- Live bKash Tokenized Checkout and SSLCommerz adapters (token grant, execute/query, IPN validation against the provider API) behind the existing protocol
-- Partial refunds through the provider with a `refunds` ledger instead of the single `refunded` status
-- Stock movement log (receipts, adjustments, returns) and low-stock notifications
-- Per-SKU courier overrides and Pathao/RedX live rate and booking APIs
-- Async order confirmation emails/SMS via a small outbox table processed by the sweeper
+- [ ] Live bKash Tokenized Checkout and SSLCommerz adapters (token grant, execute/query, IPN validation against the provider API) behind the existing protocol (#1)
+- [ ] Partial refunds through the provider with a `refunds` ledger instead of the single `refunded` status (#2)
+- [ ] Stock movement log (receipts, adjustments, returns) and low-stock notifications (#3)
+- [ ] Per-SKU courier overrides and Pathao/RedX live rate and booking APIs (#4)
+- [ ] Async order confirmation emails/SMS via a small outbox table processed by the sweeper (#5)
 
 ## License
 
